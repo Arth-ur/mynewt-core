@@ -171,32 +171,40 @@ hal_uart_blocking_tx(int port, uint8_t data)
     while (!(regs->SR & USART_SR_TC));
 }
 
+#ifdef USART1
 static void
 uart_irq1(void)
 {
     uart_irq_handler(0);
 }
+#endif
 
+#ifdef USART2
 static void
 uart_irq2(void)
 {
     uart_irq_handler(1);
 
 }
+#endif
 
-#if !defined(STM32F401xE)
+#ifdef USART3
 static void
 uart_irq3(void)
 {
     uart_irq_handler(2);
 }
+#endif
 
+#ifdef UART4
 static void
 uart_irq4(void)
 {
     uart_irq_handler(3);
 }
+#endif
 
+#ifdef UART5
 static void
 uart_irq5(void)
 {
@@ -204,11 +212,13 @@ uart_irq5(void)
 }
 #endif
 
+#ifdef USART6
 static void
 uart_irq6(void)
 {
     uart_irq_handler(5);
 }
+#endif
 
 static void
 hal_uart_set_nvic(IRQn_Type irqn, struct hal_uart *uart)
@@ -217,41 +227,47 @@ hal_uart_set_nvic(IRQn_Type irqn, struct hal_uart *uart)
     struct hal_uart_irq *ui = NULL;
 
     switch (irqn) {
+#ifdef USART1
     case USART1_IRQn:
         isr = (uint32_t)&uart_irq1;
         ui = &uart_irqs[0];
         break;
+#endif
+#ifdef USART2
     case USART2_IRQn:
         isr = (uint32_t)&uart_irq2;
         ui = &uart_irqs[1];
         break;
-#if !defined(STM32F401xE)
+#endif
+#ifdef USART3
     case USART3_IRQn:
         isr = (uint32_t)&uart_irq3;
         ui = &uart_irqs[2];
         break;
+#endif
+#ifdef UART4
     case UART4_IRQn:
         isr = (uint32_t)&uart_irq4;
         ui = &uart_irqs[3];
         break;
+#endif
+#ifdef UART5
     case UART5_IRQn:
         isr = (uint32_t)&uart_irq5;
         ui = &uart_irqs[4];
         break;
 #endif
+#ifdef USART6
     case USART6_IRQn:
         isr = (uint32_t)&uart_irq6;
         ui = &uart_irqs[5];
         break;
+#endif
     default:
         assert(0);
         break;
     }
-/*
-  XXX need somehow to detect where these exist or not
-    case UART4_IRQn:
-    case UART5_IRQn:
-*/
+
     if (ui) {
         ui->ui_uart = uart;
 
