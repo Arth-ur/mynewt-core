@@ -558,37 +558,76 @@ hal_spi_config(int spi_num, struct hal_spi_settings *settings)
     switch (spi_num) {
         case 0:
             __HAL_RCC_SPI1_CLK_ENABLE();
+#ifdef GPIO_AF5_SPI1
             gpio.Alternate = GPIO_AF5_SPI1;
+#endif
+#ifdef GPIO_AF6_SPI1
+            gpio.Alternate = GPIO_AF6_SPI1;
+#endif
             spi->handle.Instance = SPI1;
             break;
         case 1:
             __HAL_RCC_SPI2_CLK_ENABLE();
+#ifdef GPIO_AF5_SPI2
             gpio.Alternate = GPIO_AF5_SPI2;
+#endif
+#ifdef GPIO_AF6_SPI2
+            gpio.Alternate = GPIO_AF6_SPI2;
+#endif
+#ifdef GPIO_AF7_SPI2
+            gpio.Alternate = GPIO_AF7_SPI2;
+#endif
             spi->handle.Instance = SPI2;
             break;
         case 2:
             __HAL_RCC_SPI3_CLK_ENABLE();
+#ifdef GPIO_AF5_SPI3
+            gpio.Alternate = GPIO_AF5_SPI3;
+#endif
+#ifdef GPIO_AF6_SPI3
             gpio.Alternate = GPIO_AF6_SPI3;
+#endif
+#ifdef GPIO_AF7_SPI3
+            gpio.Alternate = GPIO_AF7_SPI3;
+#endif
             spi->handle.Instance = SPI3;
             break;
 #ifdef SPI4
         case 3:
             __HAL_RCC_SPI4_CLK_ENABLE();
+#ifdef GPIO_AF5_SPI4
             gpio.Alternate = GPIO_AF5_SPI4;
+#endif
+#ifdef GPIO_AF6_SPI4
+            gpio.Alternate = GPIO_AF6_SPI4;
+#endif
             spi->handle.Instance = SPI4;
             break;
 #endif
 #ifdef SPI5
         case 4:
             __HAL_RCC_SPI5_CLK_ENABLE();
+#ifdef GPIO_AF5_SPI5
             gpio.Alternate = GPIO_AF5_SPI5;
+#endif
+#ifdef GPIO_AF6_SPI5
+            gpio.Alternate = GPIO_AF6_SPI5;
+#endif
             spi->handle.Instance = SPI5;
             break;
 #endif
 #ifdef SPI6
         case 5:
             __HAL_RCC_SPI6_CLK_ENABLE();
+#ifdef GPIO_AF5_SPI6
             gpio.Alternate = GPIO_AF5_SPI6;
+#endif
+#ifdef GPIO_AF7_SPI6
+            gpio.Alternate = GPIO_AF7_SPI6;
+#endif
+#ifdef GPIO_AF8_SPI6
+            gpio.Alternate = GPIO_AF8_SPI6;
+#endif
             spi->handle.Instance = SPI6;
             break;
 #endif
