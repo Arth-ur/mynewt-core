@@ -59,6 +59,7 @@ struct stm32f4_adc_dev_cfg {
     void *secondarybuf;
     int buflen;
     ADC_HandleTypeDef *sac_adc_handle;
+    uint8_t enable_irq;
 };
 
 int stm32f4_adc_dev_init(struct os_dev *, void *);

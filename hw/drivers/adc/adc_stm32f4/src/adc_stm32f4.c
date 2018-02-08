@@ -63,12 +63,16 @@ stm32f4_adc_clk_enable(ADC_HandleTypeDef *hadc)
         case (uintptr_t)ADC1:
             __HAL_RCC_ADC1_CLK_ENABLE();
             break;
+#ifdef ADC2
         case (uintptr_t)ADC2:
             __HAL_RCC_ADC2_CLK_ENABLE();
             break;
+#endif
+#ifdef ADC3
         case (uintptr_t)ADC3:
             __HAL_RCC_ADC3_CLK_ENABLE();
             break;
+#endif
         default:
             assert(0);
     }
@@ -83,12 +87,16 @@ stm32f4_adc_clk_disable(ADC_HandleTypeDef *hadc)
         case (uintptr_t)ADC1:
             __HAL_RCC_ADC1_CLK_DISABLE();
             break;
+#ifdef ADC2
         case (uintptr_t)ADC2:
             __HAL_RCC_ADC2_CLK_DISABLE();
             break;
+#endif
+#ifdef ADC3
         case (uintptr_t)ADC3:
             __HAL_RCC_ADC3_CLK_DISABLE();
             break;
+#endif
         default:
             assert(0);
     }
@@ -105,7 +113,9 @@ stm32f4_resolve_adc_gpio(ADC_HandleTypeDef *adc, uint8_t cnum,
     rc = OS_OK;
     switch (adc_addr) {
         case (uintptr_t)ADC1:
+#ifdef ADC2
         case (uintptr_t)ADC2:
+#endif
             switch(cnum) {
                 case ADC_CHANNEL_4:
                     pin = ADC12_CH4_PIN;
@@ -136,7 +146,9 @@ stm32f4_resolve_adc_gpio(ADC_HandleTypeDef *adc, uint8_t cnum,
          * Falling through intentionally as ADC_3 contains seperate pins for
          * Channels that ADC_1 and ADC_2 contain as well.
          */
+#ifdef ADC3
         case (uintptr_t)ADC3:
+#endif
             switch(cnum) {
                 case ADC_CHANNEL_0:
                     pin = ADC123_CH0_PIN;
@@ -350,7 +362,8 @@ HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 }
 
 static void
-stm32f4_adc_dma_init(ADC_HandleTypeDef* hadc)
+stm32f4_adc_dma_init(ADC_HandleTypeDef* hadc,
+                     int enable_irq)
 {
 
     DMA_HandleTypeDef *hdma;
@@ -368,7 +381,11 @@ stm32f4_adc_dma_init(ADC_HandleTypeDef* hadc)
                      NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_SetVector(stm32f4_resolve_adc_dma_irq(hdma),
                    stm32f4_resolve_adc_dma_irq_handler(hdma));
-    NVIC_EnableIRQ(stm32f4_resolve_adc_dma_irq(hdma));
+    if(enable_irq) {
+        NVIC_EnableIRQ(stm32f4_resolve_adc_dma_irq(hdma));
+    } else {
+        NVIC_DisableIRQ(stm32f4_resolve_adc_dma_irq(hdma));
+    }
 
 }
 
@@ -383,7 +400,7 @@ stm32f4_adc_init(struct adc_dev *dev)
     adc_config = (struct stm32f4_adc_dev_cfg *)dev->ad_dev.od_init_arg;
     hadc = adc_config->sac_adc_handle;
 
-    stm32f4_adc_dma_init(hadc);
+    stm32f4_adc_dma_init(hadc, adc_config->enable_irq);
 
     if (HAL_ADC_Init(hadc) != HAL_OK) {
         assert(0);
