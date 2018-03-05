@@ -336,7 +336,7 @@ hal_timer_config(int num, uint32_t freq_hz)
         return -1;
     }
 
-    prescaler = stm32f4_base_freq(tmr->sht_regs) / freq_hz;
+    prescaler = stm32f4_base_freq(tmr->sht_regs) / freq_hz - 1;
     if (prescaler > 0xffff) {
         return -1;
     }
