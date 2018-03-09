@@ -65,6 +65,12 @@ struct stm32f4_hal_spi_cfg {
     int miso_pin;
     int mosi_pin;
     int irq_prio;
+
+    int ss_pin_af;
+    int sck_pin_af;
+    int miso_pin_af;
+    int mosi_pin_af;
+    int irq_prio_af;
 };
 
 #ifdef __cplusplus
