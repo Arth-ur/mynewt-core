@@ -423,3 +423,30 @@ hal_uart_close(int port)
 
     return 0;
 }
+
+uint8_t
+hal_uart_blocking_rx(int port, uint8_t *data, uint32_t timeout)
+{
+    struct hal_uart *u;
+    USART_TypeDef *regs;
+
+    u = &uarts[port];
+    if (port >= UART_CNT || !u->u_open) {
+        return 0;
+    }
+    regs = u->u_regs;
+
+    /* Start tick */
+    uint32_t HAL_GetTick(void);
+    /* Enable Receiver */
+    regs->CR1 |= USART_CR1_RE;
+    regs->CR1 &= ~USART_CR1_RXNEIE;
+    /* Wait for byte to be read */
+    while (!(regs->SR & USART_SR_RXNE) && --timeout);
+    /* Read data register and clear RXNE */
+    *data = regs->DR;
+    if(timeout == 0) {
+        return 1;
+    }
+    return 0;
+}
