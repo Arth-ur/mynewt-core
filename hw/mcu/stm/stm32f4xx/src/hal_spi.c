@@ -546,13 +546,7 @@ hal_spi_config(int spi_num, struct hal_spi_settings *settings)
 
     gpio.Mode = GPIO_MODE_AF_PP;
     gpio.Pull = GPIO_NOPULL;
-    if (settings->baudrate <= 2000) {
-        gpio.Speed = GPIO_SPEED_FREQ_LOW;
-    } else if (settings->baudrate <= 12500) {
-        gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    } else {
-        gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-    }
+    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
 
     /* Enable the clocks for this SPI */
     switch (spi_num) {
